@@ -1,7 +1,26 @@
 import random
-from scipy.stats import mannwhitneyu
 import numpy as np
 import csv
+
+
+def createRandEntryPoisson(nh, cr, comp, di, comf):
+    '''
+    Create a new row of data randomized according to uniform distribution, for all 5 variables.
+    nh: Expectation for number of students helped. float.
+    cr: Expectation for crowd size. float.
+    comp: Expectation for number of tutoring sessions completed. float.
+    di: Expectation for difficulty of instruction. float.
+    comf: Expectation for comfort level. float.
+
+    Min value at 0, max value at 5.
+    '''
+    numHelped = int(max(min(np.random.poisson(nh), 5), 0))
+    crowd = int(max(min(np.random.poisson(cr), 5), 0))
+    completion = int(max(min(np.random.poisson(comp), 5), 0))
+    difficulty = int(max(min(np.random.poisson(di), 5), 0))
+    comfort = int(max(min(np.random.poisson(comf), 5), 0))
+    return np.array([numHelped, crowd, completion, difficulty, comfort])
+
 
 def createRandEntryUniform(nh, cr, comp, di, comf):
     '''
@@ -30,12 +49,44 @@ def createRandEntryNormal(nh, cr, comp, di, comf):
     di: normal distribution parameters for difficulty of instruction. Tuple: (mu, sigma)
     comf: normal distribution parameters for comfort level. Tuple: (mu, sigma)
     '''
-    numHelped = int(random.normalvariate(nh[0], nh[1]))
-    crowd = int(random.normalvariate(cr[0], cr[1]))
-    completion = int(random.normalvariate(comp[0], comp[1]))
-    difficulty = int(random.normalvariate(di[0], di[1]))
-    comfort = int(random.normalvariate(comf[0], comf[1]))
+    numHelped = int(max(min(random.normalvariate(nh[0], nh[1]), 5), 0))
+    crowd = int(max(min(random.normalvariate(cr[0], cr[1]), 5), 0))
+    completion = int(max(min(random.normalvariate(comp[0], comp[1]), 5), 0))
+    difficulty = int(max(min(random.normalvariate(di[0], di[1]), 5), 0))
+    comfort = int(max(min(random.normalvariate(comf[0], comf[1]), 5), 0))
     return np.array([numHelped, crowd, completion, difficulty, comfort])
+
+# Generate dataset for both methods (Normal distribution)
+def genDataPoisson(lam1, lam2, num_data_pts):
+    '''
+    lam1: the expecation for the first week.
+    lam2: the mean for the second week.
+    num_data_pts: the sample size of each week.
+
+    Returns a tuple-- the first item is the data for the first week, and the second item is the data for the second week.
+    '''
+    week_1 = []
+    week_2 = []
+    week_1_params = lam1
+    week_2_params = lam2
+    for i in range(num_data_pts):
+        numHelped = week_1_params
+        crowd = week_1_params
+        completion = week_1_params
+        difficulty = week_1_params
+        comfort = week_1_params
+        week_1.append(createRandEntryPoisson(numHelped, crowd,
+                                      completion, difficulty, comfort))
+    for i in range(num_data_pts):
+        numHelped = week_2_params
+        crowd = week_2_params
+        completion = week_2_params
+        difficulty = week_2_params
+        comfort = week_2_params
+        week_2.append(createRandEntryPoisson(numHelped, crowd,
+                                      completion, difficulty, comfort))
+    return np.array(week_1), np.array(week_2)
+
 
 # Generate dataset for both methods (Normal distribution)
 def genDataNormal(mu1, sigma1, mu2, sigma2, num_data_pts):
@@ -105,44 +156,68 @@ def genDataUniform(min1, max1, min2, max2, num_data_pts):
 
 
 
-def noCorrelation(num_data_pts):
+def noCorrelation(num_data_pts, distribution):
     '''
     Generate a dataset with the same mean, variance for both weeks. They are both centered around 2.5, with a standard 
     deviation of 0.833, so that 97% is at 5.
     '''
-    return genDataNormal(2.5, 0.833, 2.5, 0.833, num_data_pts)
+    if distribution  == 'normal':
+        return genDataNormal(2.5, 0.833, 2.5, 0.833, num_data_pts)
+    elif distribution == 'uniform':
+        return genDataUniform(0, 5, 0, 5, num_data_pts)
+    elif distribution == 'poisson':
+        return genDataPoisson(2.5, 2.5, num_data_pts)
 
 
-def positiveCorrelation(num_data_pts):
+def positiveCorrelation(num_data_pts, distribution):
     '''
     Generate a dataset where the first week is centered at 2.5, and std. deviation of 0.833. 
     Second week is centered at 4, with a std. deviation of 0.333.
     '''
-    return genDataNormal(2.5, 0.833, 4, 0.333, num_data_pts)
+    if distribution  == 'normal':
+        return genDataNormal(2.5, 0.833, 4, 0.333, num_data_pts)
+    elif distribution == 'uniform':
+        return genDataUniform(0, 4, 1, 5, num_data_pts)
+    elif distribution == 'poisson':
+        return genDataPoisson(2.5, 4, num_data_pts)
 
-
-def veryPositiveCorrelation(num_data_pts):
+def veryPositiveCorrelation(num_data_pts, distribution):
     '''
     Generate a dataset where the first week is centered at 1, and std. deviation of 0.333. 
     Second week is centered at 4, with a std. deviation of 0.333.
     '''
-    return genDataNormal(1, 0.333, 4, 0.333, num_data_pts)
+    if distribution  == 'normal':
+        return genDataNormal(1, 0.333, 4, 0.333, num_data_pts)
+    elif distribution == 'uniform':
+        return genDataUniform(0, 3, 2, 5, num_data_pts)
+    elif distribution == 'poisson':
+        return genDataPoisson(1, 4, num_data_pts)
 
 
-def negativeCorrelation(num_data_pts):
+def negativeCorrelation(num_data_pts, distribution):
     '''
     Generate a dataset where the first week is centered at 1, and std. deviation of 0.333. 
     Second week is centered at 2.5, with a std. deviation of 0.833.
     '''
-    return genDataNormal(1, 0.333, 2.5, 0.833, num_data_pts)
+    if distribution  == 'normal':
+        return genDataNormal(2.5, 0.833, 1, 0.333, num_data_pts)
+    elif distribution == 'uniform':
+        return genDataUniform(1, 5, 0, 4, num_data_pts)
+    elif distribution == 'poisson':
+        return genDataPoisson(4, 2.5, num_data_pts)
 
 
-def veryNegativeCorrelation(num_data_pts):
+def veryNegativeCorrelation(num_data_pts, distribution):
     '''
     Generate a dataset where the first week is centered at 4, with a std. deviation of 0.333.
     Second week is centered at 1, and std. deviation of 0.333. 
     '''
-    return genDataNormal(4, 0.333, 1, 0.333, num_data_pts)
+    if distribution  == 'normal':
+        return genDataNormal(4, 0.333, 1, 0.333, num_data_pts)
+    elif distribution == 'uniform':
+        return genDataUniform(2, 5, 0, 3, num_data_pts)
+    elif distribution == 'poisson':
+        return genDataPoisson(4, 1, num_data_pts)
 
 
 def writeToCSV(filename, week_1, week_2):
@@ -176,11 +251,13 @@ def writeToCSV(filename, week_1, week_2):
             })
 
 
-week_1, week_2 = noCorrelation(30)
-writeToCSV('./sample_data/normal/no_correlation', week_1, week_2)
 
-week_1, week_2 = positiveCorrelation(30)
-writeToCSV('./sample_data/normal/pos_correlation', week_1, week_2)
+for distribution in ['normal', 'uniform', 'poisson']:
+    week_1, week_2 = noCorrelation(30, distribution)
+    writeToCSV('./sample_data/{}/no_correlation'.format(distribution), week_1, week_2)
 
-week_1, week_2 = negativeCorrelation(30)
-writeToCSV('./sample_data/normal/neg_correlation', week_1, week_2)
+    week_1, week_2 = positiveCorrelation(30, distribution)
+    writeToCSV('./sample_data/{}/pos_correlation'.format(distribution), week_1, week_2)
+
+    week_1, week_2 = negativeCorrelation(30, distribution)
+    writeToCSV('./sample_data/{}/neg_correlation'.format(distribution), week_1, week_2)
