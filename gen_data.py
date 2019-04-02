@@ -5,7 +5,7 @@ import numpy as np
 # Creates a new row of data
 def createRandEntry(nh, cr, comp, di, comf):
     '''
-    Create a new row of data randomized according to normal distribution, for all 5 datasets.
+    Create a new row of data randomized according to normal distribution, for all 5 variables.
     nh: normal distribution parameters for number of students helped. Tuple: (mu, sigma)
     cr: normal distribution parameters for crowd size. Tuple: (mu, sigma)
     comp: normal distribution parameters for number of tutoring sessions completed. Tuple: (mu, sigma)
