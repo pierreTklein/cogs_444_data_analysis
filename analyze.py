@@ -26,10 +26,11 @@ def calcMattWhitneyU(week_1, week_2):
     week_1, week_2 is of the same format as the output of genData.
     Return the results for all 5 variables.
     '''
-    w1_nh, w1_cr, w1_comp, w1_di, w1_comf = [
+    w1_comf, w1_di, w1_comp, w1_cr, w1_nh = [
         [row[i] for row in week_1] for i in range(len(week_1[0]))]
-    w2_nh, w2_cr, w2_comp, w2_di, w2_comf = [
+    w2_comf, w2_di, w2_comp, w2_cr, w2_nh = [
         [row[i] for row in week_2] for i in range(len(week_2[0]))]
+    print(w1_cr, w2_cr)
     nh_mwu = mannwhitneyu(w1_nh, w2_nh)
     cr_mwu = mannwhitneyu(w1_cr, w2_cr)
     comp_mwu = mannwhitneyu(w1_comp, w2_comp)
@@ -44,16 +45,17 @@ def calcMedianTest(week_1, week_2):
     week_1, week_2 is of the same format as the output of genData.
     Return the results for all 5 variables.
     '''
-    w1_nh, w1_cr, w1_comp, w1_di, w1_comf = [
+    w1_comf, w1_di, w1_comp, w1_cr, w1_nh = [
         [row[i] for row in week_1] for i in range(len(week_1[0]))]
-    w2_nh, w2_cr, w2_comp, w2_di, w2_comf = [
+    w2_comf, w2_di, w2_comp, w2_cr, w2_nh = [
         [row[i] for row in week_2] for i in range(len(week_2[0]))]
-    nh_mwu = median_test(w1_nh, w2_nh)
-    cr_mwu = median_test(w1_cr, w2_cr)
-    comp_mwu = median_test(w1_comp, w2_comp)
-    di_mwu = median_test(w1_di, w2_di)
-    comf_mwu = median_test(w1_comf, w2_comf)
-    return nh_mwu, cr_mwu, comp_mwu, di_mwu, comf_mwu 
+    print(w1_cr, w2_cr)
+    nh_mt = median_test(w1_nh, w2_nh)
+    cr_mt = median_test(w1_cr, w2_cr)
+    comp_mt = median_test(w1_comp, w2_comp)
+    di_mt = median_test(w1_di, w2_di)
+    comf_mt = median_test(w1_comf, w2_comf)
+    return nh_mt, cr_mt, comp_mt, di_mt, comf_mt 
 
 
 def analyzeSample():
@@ -73,6 +75,5 @@ def analyze():
     directory = './data'
     week_1, week_2 = loadCSV('{0}/method_1.csv'.format(directory), '{0}/method_2.csv'.format(directory))
     print(calcMattWhitneyU(week_1, week_2))
-
 
 analyze()
