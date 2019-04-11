@@ -27,9 +27,9 @@ def calcMattWhitneyU(week_1, week_2):
     week_1, week_2 is of the same format as the output of genData.
     Return the results for all 5 variables.
     '''
-    w1_comf, w1_di, w1_comp, w1_cr, w1_nh = [
+    w1_cr, w1_di, w1_comp, w1_comf, w1_nh = [
         [row[i] for row in week_1] for i in range(len(week_1[0]))]
-    w2_comf, w2_di, w2_comp, w2_cr, w2_nh = [
+    w2_cr, w2_di, w2_comp, w2_comf, w2_nh = [
         [row[i] for row in week_2] for i in range(len(week_2[0]))]
     nh_mwu = mannwhitneyu(w1_nh, w2_nh)
     cr_mwu = mannwhitneyu(w1_cr, w2_cr)
