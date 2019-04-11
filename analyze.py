@@ -37,7 +37,7 @@ def calcMattWhitneyU(week_1, week_2):
     di_mwu = mannwhitneyu(w1_di, w2_di)
     comf_mwu = mannwhitneyu(w1_comf, w2_comf)
     table = [
-        ('Question', 'Statistic', 'P-Value'),
+        ('Question', 'U Statistic', 'P-Value'),
         ('Number Helped', nh_mwu[0], nh_mwu[1]),
         ('Crowd Size', cr_mwu[0], cr_mwu[1]),
         ('Completed', comp_mwu[0], comp_mwu[1]),
