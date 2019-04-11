@@ -27,3 +27,13 @@ The output will be the Matt Whitney U Test Results for the 5 questions:
 |         Comfort|       XXX.X|                     X.XX|
 +----------------+------------+-------------------------+
 ```
+
+## Generating Box-plot data
+
+The script to generate the box plot is written in `R`. Please download the proper package [here](https://cran.rstudio.com). Then, run the following command in the root directory:
+
+```bash
+Rscript gen_boxplot.r
+```
+
+It should save the box plots in a pdf file.
