@@ -12,9 +12,9 @@ Place two files in a directory called `data`, named `method_1.csv`, and `method_
 python analyze.py
 ```
 
-The output will be the Matt Whitney U Test Results for the 5 questions:
+The output will be the Matt Whitney U Test Results for the 5 questions, along with the statistical power:
 
-```sh
+```bash
 +-----------------------------+
 | Matt Whitney U Test Results |
 +----------------+------------+-------------------------+
@@ -26,6 +26,17 @@ The output will be the Matt Whitney U Test Results for the 5 questions:
 |      Difficulty|       XXX.X|                     X.XX|
 |         Comfort|       XXX.X|                     X.XX|
 +----------------+------------+-------------------------+
++-------------------+
+| Statistical Power |
++----------------+--------+--------+
+|        Question|    Beta|   Power|
++----------------+--------+--------+
+|   Number Helped|    0.XX|    0.XX|
+|      Crowd Size|    0.XX|    0.XX|
+|       Completed|    0.XX|    0.XX|
+|      Difficulty|    0.XX|    0.XX|
+|         Comfort|    0.XX|    0.XX|
++----------------+--------+--------+
 ```
 
 ## Generating Box-plot data
